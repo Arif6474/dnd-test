@@ -1,24 +1,58 @@
-import logo from './logo.svg';
+import { DragDropContext } from 'react-beautiful-dnd';
+import Column from './Column/Column';
+import initialData from './InitialData';
 import './App.css';
 
 function App() {
+  const { columnOrder, columns, tasks } = initialData;
+
+  async function onDragEnd(result) {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+    const column = columns[source.droppableId];
+    const newTaskIds = Array.from(column.taskIds);
+    newTaskIds.splice(source.index, 1);
+    newTaskIds.splice(destination.index, 0, draggableId);
+
+    const newColumn = {
+      ...column,
+      taskIds: newTaskIds,
+    };
+
+    const newState = {
+     
+      columns: {
+        ...columns,
+        [newColumn.id]: newColumn,
+      },
+    };
+
+
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <>
+        {
+          columnOrder.map(columnId => {
+            const column = columns[columnId]
+            const alltasks = column.taskIds.map(taskId => tasks[taskId])
+            // console.log("🚀 ~ file: App.js:21 ~ App ~ alltasks:", alltasks)
+            return <Column key={column.id} column={column} tasks={alltasks} />
+          })
+        }
+      </>
+    </DragDropContext>
   );
 }
 
