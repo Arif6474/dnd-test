@@ -4,5 +4,10 @@
     padding: 8px;
     margin-bottom: 8px;
     background-color: white;
+    transition: background 350ms ease-in-out;
     /* background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')}; */
+}
+
+.task_container.dragging{
+    background-color: lightgreen;
 }

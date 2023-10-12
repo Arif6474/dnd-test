@@ -2,9 +2,13 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column/Column';
 import initialData from './InitialData';
 import './App.css';
+import { useState } from 'react';
 
 function App() {
-  const { columnOrder, columns, tasks } = initialData;
+  
+  const [data, setData] = useState(initialData)
+
+  const { columnOrder, columns, tasks } = data;
 
   async function onDragEnd(result) {
     const { destination, source, draggableId } = result;
@@ -18,31 +22,38 @@ function App() {
     ) {
       return;
     }
-    const column = columns[source.droppableId];
-    const newTaskIds = Array.from(column.taskIds);
-    newTaskIds.splice(source.index, 1);
-    newTaskIds.splice(destination.index, 0, draggableId);
 
-    const newColumn = {
-      ...column,
-      taskIds: newTaskIds,
-    };
-
-    const newState = {
-     
-      columns: {
+    const start = columns[source.droppableId];
+    const finish = columns[destination.droppableId];
+  
+    if (start === finish) {
+      const newTaskIds = Array.from(start.taskIds);
+      newTaskIds.splice(source.index, 1);
+      newTaskIds.splice(destination.index, 0, draggableId);
+  
+      const newColumn = {
+        ...start,
+        taskIds: newTaskIds,
+      };
+  
+      const newColumns = {
         ...columns,
         [newColumn.id]: newColumn,
-      },
-    };
-
-
+      };
+  
+      const newData = {
+        ...data,
+        columns: newColumns,
+      };
+  
+      setData(newData);
+    }
 
   }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <>
+      <div className="App">
         {
           columnOrder.map(columnId => {
             const column = columns[columnId]
@@ -51,7 +62,7 @@ function App() {
             return <Column key={column.id} column={column} tasks={alltasks} />
           })
         }
-      </>
+      </div>
     </DragDropContext>
   );
 }

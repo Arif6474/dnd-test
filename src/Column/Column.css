@@ -9,6 +9,8 @@
 }
 .title {
   padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid rgb(230, 229, 229);
 }
 .task_list {
   padding: 8px;
@@ -17,4 +19,8 @@
       props.isDraggingOver ? 'lightgrey' : 'inherit'}; */
   flex-grow: 1;
   min-height: 100px;
+  transition: background 350ms ease-in-out;
+}
+.draggingOver{
+  background-color: #feffd4;
 }

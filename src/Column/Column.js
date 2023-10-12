@@ -8,8 +8,8 @@ function Column({ column, tasks }) {
         <div className="container">
             <h1 className="title">{column.title}</h1>
             <Droppable droppableId={column.id}>
-                {provided => (
-                    <div className="task_list"
+                {(provided, snapshot) => (
+                    <div className={`task_list  ${snapshot.isDraggingOver  ? 'draggingOver' : ''}`}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                     >
